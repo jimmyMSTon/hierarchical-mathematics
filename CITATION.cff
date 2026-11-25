@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you refer to this research proposal, please cite the position paper."
+title: "From Proof Production to Knowledge Assimilation: A Paradigm of Hierarchical Proofs and Cumulative Verification for Mathematics in the Age of AI"
+authors:
+  - family-names: LAI
+    given-names: Chunming
+    affiliation: Independent Researcher
+    orcid: https://orcid.org/0009-0002-7594-4535
+version: "1.0.0"
+date-released: "2026-11-25"
+url: "https://github.com/jimmyMSTon/hierarchical-mathematics"
+license: CC-BY-4.0
+preferred-citation:
+  type: report
+  title: "From Proof Production to Knowledge Assimilation: A Paradigm of Hierarchical Proofs and Cumulative Verification for Mathematics in the Age of AI"
+  authors:
+    - family-names: LAI
+      given-names: Chunming
+      orcid: https://orcid.org/0009-0002-7594-4535
+  year: 2026
+  version: "1.0.0"
+  institution:
+    name: Independent Researcher
+  url: "https://github.com/jimmyMSTon/hierarchical-mathematics/releases/tag/v1.0.0"

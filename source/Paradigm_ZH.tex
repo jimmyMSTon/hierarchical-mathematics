@@ -1,0 +1,377 @@
+\documentclass[UTF8,11pt,a4paper,fontset=fandol]{ctexart}
+\usepackage[a4paper,left=26mm,right=26mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,tabularx,array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{xcolor,fancyhdr,hyperref,enumitem}
+\definecolor{ink}{HTML}{18354C}
+\definecolor{muted}{HTML}{526775}
+\definecolor{soft}{HTML}{EDF3F6}
+\hypersetup{colorlinks=true,linkcolor=ink,citecolor=ink,urlcolor=ink,pdftitle={从证明的生产到知识的吸收},pdfsubject={分层证明与累积验证范式},pdfauthor={赖俊铭 (Chunming LAI)},pdfkeywords={数学研究范式; 人工智能; 分层证明; 累积验证; CC BY 4.0}}
+\urlstyle{same}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{2.5pt}
+\linespread{1.16}
+\setlength{\headheight}{15pt}
+\ctexset{section={format=\Large\bfseries\color{ink},beforeskip=18pt,afterskip=8pt},subsection={format=\large\bfseries,beforeskip=13pt,afterskip=5pt}}
+\newtheorem{proposition}{命题}
+\theoremstyle{definition}\newtheorem{definition}{定义}
+\renewcommand{\proofname}{证明}
+\fancyhf{}\fancyhead[L]{\footnotesize\color{muted} 数学研究范式 \enspace / \enspace 分层证明与累积验证}\fancyhead[R]{\footnotesize\color{muted} 2026}
+\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0.3pt}\pagestyle{fancy}
+\newcommand{\Th}{\operatorname{Th}}
+\newcommand{\K}{\mathcal K}
+\newcommand{\Lset}{\mathcal L}
+\newcommand{\cl}{\operatorname{cl}}
+\setlist[enumerate]{leftmargin=2.5em,itemsep=2pt,topsep=3pt}
+\begin{document}
+\thispagestyle{plain}
+\begin{center}
+\vspace*{8mm}
+{\fontsize{24}{32}\selectfont\bfseries 从证明的生产到知识的吸收\par}
+\vspace{4mm}
+{\Large\bfseries 面向人工智能时代的分层证明与累积验证范式\par}
+\vspace{5mm}
+{\large From Proof Production to Knowledge Assimilation:\par A Paradigm of Hierarchical Proofs and Cumulative Verification\par}
+\vspace{5mm}
+{\small 研究立场与形式框架论文\quad 2026 年 11 月 24 日\par}
+{\large 赖俊铭（Chunming LAI）\par}
+{\small Independent Researcher（独立研究者）\par}
+{\small \href{mailto:jimmybus0610@outlook.com}{\texttt{jimmybus0610@outlook.com}}\par}
+{\small ORCID: \href{https://orcid.org/0009-0002-7594-4535}{0009-0002-7594-4535}\par}
+\vspace{2mm}
+{\small 本文采用\href{https://creativecommons.org/licenses/by/4.0/}{知识共享署名 4.0 国际许可协议（CC BY 4.0）}。\par}
+\end{center}
+\vspace{4mm}
+\noindent\textbf{摘要}\quad 人工智能正在改变数学证明的稀缺性。当机器能够产生超出个体阅读能力的证明时，数学研究面临的关键问题不再仅是如何得到正确结果，而是如何使这些结果成为人类能够理解、验证、共享和继续使用的知识。本文主张，数学共同体应当主动推进成果组织与接受方式的范式转移。本文提出分层证明与累积验证框架：相对于既有公共定理库，将目标定理及其所需的新证明组织为有限有向无环依赖图，以自底向上的依赖高度确定层级；从第零级起，研究者逐步理解和验证局部证明，将已验证的新成果纳入公共定理库，并在上层证明与后续研究中直接复用。本文明确区分研究结构与知识库的动态增长、局部论证与目标定理的整体成立、形式正确性与语义忠实性，并证明层级定义的唯一性及局部证明的组合正确性。通过完整的数学实例，展示不等深分支、跨层引用、共享依赖与累积接受如何协同运行。本文进一步论证这一组织方式在局部审查、分布式协作、可追溯性和知识复用方面的潜在收益。它不是对现有形式化技术的替代，而是对其科研角色的重新组织。面对证明生产与知识吸收之间已经显现的张力，本文呼吁数学共同体立即利用现有基础设施开展实践，主动塑造一种使 AI 的证明能力与人类的数学理解相互增强的研究范式。
+
+\noindent\textbf{关键词：} 数学研究范式；人工智能；分层证明；累积验证；数学理解；公共定理库
+\vspace{4mm}
+\hrule height 0.4pt
+\section{引言：从证明稀缺到理解稀缺}
+数学研究并不止于判定命题真假。证明还承担解释、组织和传播数学思想的功能；一个重要结果的意义，往往通过其证明所揭示的结构、方法和新的问题才逐渐显现。Thurston 在关于数学证明与进步的经典论述中，强调数学共同体的理解及其交流在研究活动中的地位\cite{thurston}。这一认识在人工智能时代具有新的制度意义。
+
+长期以来，证明的发现、写作、审查、发表与传播大多由人类完成。虽然这些活动的难度并不相同，但它们都受到人的研究能力和可投入时间的制约。AI 改变了这一相对关系：生成论证的规模可以随着模型与计算资源扩大，而专家理解、语义核查、教学和知识整合并不必然以相同速度扩张。Tao 将这种可能的变化概括为从证明稀缺进入证明丰裕的时代，并分析其对评审和知识传播的冲击\cite{tao}。
+
+这种变化不应被理解为数学研究失去意义。恰恰相反，若证明生产能力显著增强，数学共同体便拥有了更多潜在的研究资源；真正的问题是，既有制度能否将这些资源转化为能够由人类掌握并继续发展的数学知识。
+
+本文提出一种具体的应对方式：\textbf{将新数学成果的组织与接受，从主要围绕完整论文展开，转向围绕相互依赖、可独立审查且能够持续累积的数学证明节点展开。} 传统论文仍是解释思想、论述意义及传播研究成果的重要媒介，但不再需要独自承担大规模证明的全部验证与知识组织任务。
+
+本文的贡献是提出并论证这一科研范式，而非宣称发明新的证明助手、定理库或图论算法。现有工具与开放科学实践为这一改变提供了基础；本文试图说明如何将它们组织成一种自下而上接受新数学知识的机制，以及为什么应当现在开始推进这种改变。
+
+\section{变革的必要性与紧迫性}
+\subsection{从现实案例看证明与理解的分离}
+2026 年 6 月发布、获国际数学联盟支持的《莱顿人工智能与数学宣言》指出，自动化论证、形式化翻译、成果归属及现行评审体系都面临新的压力\cite{leiden}。同年 9 月，25 位菲尔兹奖得主作为初始签署人发布联合声明，强调数学研究不应被简化为竞相解决知名问题；他们关心的是数学概念、洞见与代际知识传承\cite{fields}。
+
+此后，2026 年 11 月 20 日，Levent Alpöge 宣布与 Claude 合作得到黎曼猜想及 Dirichlet $L$ 函数相应广义猜想的证明，公开了约 1700 万行 Lean 代码。他在说明中明确表示，理解、简化和恰当写出论证仍是接下来的工作\cite{alpoge}。11 月 21 日，Lean FRO 与 Mathlib Initiative 联合声明对黎曼猜想的证明正确性具有充分信心，其理由包括对 Mathlib 原命题的专家审定、命题一致性比较、代码复现及多个证明检查器的验证\cite{rh}。
+
+这一区分十分关键：该案例不能被描述为已经发现语义翻译错误，也不能因为其体量庞大就否定形式化检查的有效性。它所揭示的是，即使目标命题和形式证明已经过强有力的核验，数学思想的解释和吸收仍可能构成独立而庞大的工作。Rubinstein 公开的研究导读已尝试以经典解析数论语言重构证明，并继续展开相关数学输入\cite{rubinstein}。这显示了理解工作正在展开，而非证明的数学意义已全部被吸收。
+
+因此，争论不应停留在机器是否有资格证明定理。真正迫切的问题在于，数学界应该如何安排从形式正确的结果到可理解、可教学、可复用的数学知识之间的转换过程。
+
+\subsection{为什么单纯加快生产无法解决吸收瓶颈}
+可以用一个简化的工作量模型表达上述矛盾。设第 $t$ 个时期新产生的待吸收工作量为 $a_t$，实际完成的工作量为 $s_t$，积压为 $B_t$，均以同一抽象工作量单位计量。若没有丢弃或重新估计任务，则
+\[
+ B_{t+1}=B_t+a_t-s_t,\qquad 0\le s_t\le B_t+a_t.
+\]
+从而 $B_N=B_0+\sum_{t=0}^{N-1}(a_t-s_t)$。当长期新增工作量超过处理能力时，积压随之增长。这只是条件性说明，不是对未来数学产出作出的定量预测；本文并没有测得全球数学界的生产或审查速率。
+
+即使更强的证明检查工具能显著降低形式验证成本，命题的实际含义、研究价值、论证动机和理论联系仍需要被理解。继续产生更多正确证明，并不能单独解决这些工作积压。更有效的应对方式是同时改变工作的组织方式：使已完成的验证能够持久保存，使审查对象可分离，使不同研究者的局部劳动能够组合，并尽可能避免跨研究项目的重复投入。
+
+\subsection{为什么应当现在开始}
+变革的紧迫性不依赖于某个确定的 AI 增长率，也不要求先证明所有数学领域已陷入同等程度的危机。已有现实案例表明，超大规模形式化证明已经可以出现，而科研制度、人才培养和公共基础设施的演化需要时间。若只在审查资源全面承压之后才开始改革，知识吸收的积压可能已经形成。
+
+另一方面，Lean、Mathlib、证明蓝图以及开放协作项目已经提供了可用的基础\cite{mathlib,kontorovich,architect,polymath}。没有必要等待一个统一的下一代平台全部完成。现在开展开放的科研组织实践，既能够缓解潜在的吸收压力，也能让数学共同体而非单一技术提供者参与决定其未来研究方式。
+
+\section{新范式的核心：分层证明与累积验证}
+\subsection{基本思想：把证明组织为可建立的知识结构}
+设目标定理为 $T=\mathrm{thm}$。在传统证明中，一个复杂结果通常通过一系列已知定理、新引理和局部推理获得。本文不改变这一数学事实，而改变这些局部证明在科研活动中的地位。
+
+当一个目标定理的证明过长时，可以把其中适宜独立表达的论证提炼为若干新引理。如果某一引理的证明仍然复杂，可以继续将其分解为更基础的引理。递归过程形成一个依赖结构，直到基础新引理能够仅依靠既有数学知识和局部推理得到证明。证明构造可以从目标向下展开，也可以从已有数学结果向上探索；最终用于组织验证的层级则统一自底向上确定。
+
+分层的目的，是将可能极其庞大的完整展开证明转化为一系列人类能够分别处理的局部证明。一旦下层结果已经建立，上层证明（包括目标定理的局部证明）便可以直接引用这些结果，而不必重复其完整推导。这里的分解并不意味着按页数、字数或固定深度机械切割证明。目标在于让局部论证成为有明确前提、结论及数学意义的审查对象。本文不规定单个引理的篇幅上限、引理数量、层数，也不要求每个新结果使用相同的分解粒度。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, every node/.style={font=\small}, box/.style={draw=ink!55,rounded corners=2pt,fill=soft,minimum width=36mm,minimum height=8mm,align=center}, arrow/.style={->,semithick,draw=ink!75}]
+\node[box] (t) at (0,2.6) {目标定理 $T$};
+\node[box] (a) at (-3,1.3) {新引理 $A$};
+\node[box] (b) at (0,1.3) {新引理 $B$};
+\node[box] (c) at (3,1.3) {新引理 $C$};
+\node[box] (d) at (-1.5,0) {基础新引理 $D$};
+\node[box] (e) at (1.5,0) {基础新引理 $E$};
+\draw[arrow] (t)--(a);\draw[arrow] (t)--(b);\draw[arrow] (t)--(c);
+\draw[arrow] (a)--(d);\draw[arrow] (b)--(d);\draw[arrow] (b)--(e);\draw[arrow] (c)--(e);
+\node[draw=ink!40,rounded corners=2pt,minimum width=103mm,minimum height=8mm] (k) at (0,-1.2) {既有公共定理库 $\K_0$ 与基础理论};
+\draw[arrow,dashed] (d)--(d|-k.north);\draw[arrow,dashed] (e)--(e|-k.north);
+\node[anchor=west,text=muted] at (5.0,2.6) {$r=2$};
+\node[anchor=west,text=muted] at (5.0,1.3) {第 1 级};
+\node[anchor=west,text=muted] at (5.0,0) {第 0 级};
+\end{tikzpicture}
+\par\small 图 1：分层依赖结构的一种示意。箭头指向被引用的结果；\par 验证与知识建立的方向相反。虚线示意对既有知识的引用。
+\end{center}
+
+\subsection{既有知识与新证明的边界}
+为使定义严谨，需要区分基础理论、公共定理库以及当前研究中新生成的证明。固定一个具有通常弱化与证明组合性质的数学推理系统及其语言；以下论证在同一背景语言内进行，命题视为封闭陈述（必要时对自由参数作全称闭包），设 $\Gamma$ 为其中采用的基础公理与定义所构成的背景理论；$\K_0$ 为当前证明开始时可用的已有成果记录。记 $S(\K_0)$ 为这些记录所对应的命题集合，并记
+\[
+ \Sigma_0=\Gamma\cup S(\K_0).
+\]
+下文的 $\vdash$ 表示在该推理系统中的有效推导。引理中局部使用的假设视为命题本身的组成部分，例如写为蕴含式或全称量化的条件命题，而不是无条件加入背景理论。使用的新数学对象可在明确的定义及背景下表述；若某项结论依赖额外公理，则其有效性相对于这些公理而言，不因加入定理库而成为无条件命题。
+
+公共定理库不是公理系统的同义词，而是可检索、可引用、可复用的数学知识记录。本文所称“新证明”，指本次研究中尚未作为相应的已验证证明记录存在于 $\K_0$ 的证明单元；并不据此断言其命题从未在数学史上被证明。已知命题的新证明同样可以有研究价值。对于仅引用已有证明的情况，则无需再次把该已有证明作为当前新节点展开。
+
+\subsection{依赖图与层级的正式定义}
+\begin{definition}[证明依赖结构]
+给定目标定理 $T=\mathrm{thm}$，设 $G=(V,E)$ 为有限有向无环图。$V$ 包含目标节点 $T$ 与其证明所需的新引理节点；每个 $v\in V$ 表示一个命题 $P_v$ 及其相应局部证明 $\pi_v$。若局部证明 $\pi_v$ 在所选分解中直接引用当前结构中的新证明节点 $u$ 所建立的结论，则置 $(v,u)\in E$。定义
+\[
+ D(v)=\{u\in V:(v,u)\in E\}.
+\]
+其中仅计入本次证明结构内部的直接引用，不将已有定理库的结论或间接依赖重复计入。取 $V$ 为从 $T$ 沿依赖边可到达的所有节点（包括 $T$ 本身）。
+\end{definition}
+
+依赖图表示的是已选定的证明结构，而不是一个命题所有可能的证明方法。不同证明策略或不同的分解粒度可以产生不同的图；同一命题也可以拥有不同的证明记录。若一个命题已有可用证明，但本次研究仍希望公开其新证明，则该新证明可作为独立记录；上层仅引用旧证明时，不产生对这一新记录的依赖。在探索尚未完成时，候选引理及依赖关系可以调整。本文对有限无环图的论证适用于给定的证明结构，并不限制数学发现过程中的探索路径。
+
+\begin{definition}[自底向上的层级]
+对于任意 $v\in V$，定义
+\begin{equation}\label{eq:level}
+ \boxed{\ell(v)=\begin{cases}
+ 0,&D(v)=\varnothing,\\[3pt]
+ 1+\displaystyle\max_{u\in D(v)}\ell(u),&D(v)\ne\varnothing.
+ \end{cases}}
+\end{equation}
+目标定理直接依赖的新引理数为 $n=|D(T)|$，其层级为 $r=\ell(T)$；第 $k$ 级新引理集合为 $\Lset_k=\{v\in V\setminus\{T\}:\ell(v)=k\}$。
+\end{definition}
+
+第 0 级引理并非公理，也不一定是最容易的命题。它仅意味着该证明不依赖本次结构中的其他新引理。层级度量的是新证明依赖高度，而非证明长度、数学难度或成果重要性。
+
+本定义允许跨层直接引用。例如，第 4 级的节点既可以引用第 3 级引理，也可以直接引用第 0 级或第 1 级引理。若同一个基础引理被多个不同层级的证明使用，它仍是同一节点，不必为每条路径复制。这使不等深分支和共享依赖自然地纳入同一结构。
+
+\begin{proposition}[层级唯一性与严格下降]\label{prop:height}
+对任意给定有限有向无环依赖图，式 \eqref{eq:level} 唯一确定每一节点的层级。该层级等于从该节点沿依赖边出发的最长路径长度（以边数计）。若 $v\to u$，则 $\ell(u)<\ell(v)$。若所有节点均从 $T$ 可到达，则 $T$ 是唯一最高层节点。
+\end{proposition}
+\begin{proof}
+有限无环图中，从每个节点出发的路径均有限，且至少存在长度为零的路径。记最长路径长度为 $h(v)$。若无出边，则 $h(v)=0$；否则每条非空路径首先经过某个 $u\in D(v)$，故 $h(v)=1+\max_{u\in D(v)}h(u)$，因此存在满足定义的层级。按最长路径长度归纳：基础节点的层级唯一为零，其他节点的层级由更短路径的节点唯一确定，故 $\ell=h$ 唯一。任意边 $v\to u$ 满足 $\ell(v)\ge 1+\ell(u)$。沿从 $T$ 到任何不同节点的非空路径反复应用严格下降，即有 $\ell(T)>\ell(v)$。
+\end{proof}
+
+此外，当 $r>0$ 时，从 $T$ 每次选择一个达到最大值的依赖节点，即得到层级依次为 $r,r-1,\ldots,0$ 的路径。因此所有整数层级均有对应节点；而当目标可直接以既有知识证明时，$r=0$，不需要人为引入辅助引理。
+
+\subsection{局部证明与整体定理的逻辑关系}
+对节点 $v$，局部证明的逻辑任务是
+\begin{equation}\label{eq:local}
+ \Sigma_0\cup\{P_u:u\in D(v)\}\vdash P_v.
+\end{equation}
+这意味着，研究者在检查该节点时，可以把依赖引理的结论作为明确前提，检查本节点的论证是否有效，并检查这些前提是否确实适用于当前的对象、参数和假设。上层证明无需重复展开每一个已建立的下层证明。
+
+\begin{proposition}[分层局部证明的组合正确性]\label{prop:composition}
+若依赖结构中的每个节点均满足式 \eqref{eq:local}，则对所有 $v\in V$ 有 $\Sigma_0\vdash P_v$，特别地 $\Sigma_0\vdash P_T$。
+\end{proposition}
+\begin{proof}
+对 $\ell(v)$ 作强归纳。当 $\ell(v)=0$ 时，$D(v)=\varnothing$，式 \eqref{eq:local} 即给出 $\Sigma_0\vdash P_v$。假定所有层级小于 $k$ 的节点均已在 $\Sigma_0$ 下获得有效推导。若 $\ell(v)=k$，由命题 \ref{prop:height} 知 $D(v)$ 中每个节点均属更低层，故其结论均可由 $\Sigma_0$ 推出。将这些推导代入式 \eqref{eq:local} 所用前提的位置（或反复应用切规则），得到 $\Sigma_0\vdash P_v$。归纳完成。
+\end{proof}
+
+这个结论利用已有的逻辑组合性质，而非新的证明论定理。其意义在于表明：分层并不降低数学证明的严谨性，局部论证可以组合成与整体证明相同的逻辑保证。它不意味着任意分解都是有效的，也不意味着图本身就是证明。逻辑保证来自各局部证明的有效性、前提一致性与依赖关系的完整表达。
+
+\subsection{验证如何累积：从当前依赖图到公共定理库}
+分层只是第一部分。若所有局部证明最终仍只能作为同一篇论文的附属内容被整体接受，则证明组织虽然有所改善，却尚未实现本文所主张的累积机制。
+
+设 $A_t\subseteq V$ 表示在某一时刻已沿依赖关系建立、并经过所述人类理解与验证而纳入公共知识的节点集合。将每个节点的证明记录记为 $q_v=(P_v,\pi_v)$，则理想化的累积过程可以表示为
+\begin{equation}\label{eq:lib}
+ \K_t=\K_0\cup\{q_v:v\in A_t\}.
+\end{equation}
+在暂不考虑错误记录撤回或修正的理想累积模型中，$A_t\subseteq A_{t+1}$，因此相邻阶段满足 $\K_t\subseteq\K_{t+1}$。这里的 $t$ 仅表示知识积累时刻，而不是层级。对一个已完成局部核查但仍依赖尚未建立的引理的论证，所获得的是条件性的局部有效性，而非无条件建立该节点的结论。设 $Q$ 为已经确认式 \eqref{eq:local} 有效的节点集合，则可定义一个数学上的闭包序列：
+\[
+ C_0=\varnothing,\qquad
+ C_{j+1}=C_j\cup\{v\in Q:D(v)\subseteq C_j\}.
+\]
+令 $C_*=\bigcup_{j\ge0}C_j$。它刻画在既有知识与已核验局部论证的基础上能够通过组合建立的节点。对迭代次数归纳并应用证明组合性质，可知 $C_*$ 中每个命题均能由 $\Sigma_0$ 推出。且 $C_*$ 是对上述添加运算封闭的最小节点集合：任何此类封闭集合均包含 $C_0$，并由归纳包含每个 $C_j$。对有限依赖图，这一序列最终稳定；若所有局部论证均有效，即 $Q=V$，则对任意整数 $j\ge0$ 有 $C_j=\{v\in V:\ell(v)<j\}$，特别地 $C_{r+1}=V$。这由归纳直接得到：$C_0$ 为空；在第 $j+1$ 次迭代中，$D(v)\subseteq C_j$ 当且仅当 $v$ 为叶节点或其所有直接依赖的层级小于 $j$，等价于 $\ell(v)\le j$。这是逻辑可建立性的描述，并非另设人工审查程序或额外接受门槛；实际的公共知识纳入仍是数学共同体的科研实践。
+
+研究者可以从第 0 级开始核查基础新引理，将已验证成果积累到公共定理库。第 1 级及更高层的研究者可以使用已经建立的下层结论，验证其新的局部推理。不同分支不需要以相同速度推进：只要某一节点所依赖的结论已经建立，其局部证明便具备相应的逻辑基础；其他无关分支是否已经完成，不影响这一组合关系。
+
+\paragraph{一个引理的建立如何改变下一层的证明。}
+若某个新引理 $u$ 已建立并纳入库，则其结论 $P_u$ 可以像任何既有定理一样被上层证明引用。上层研究者所面对的是局部推导 $\pi_v$ 以及引用的命题陈述，而不是要求重新展开 $\pi_u$ 的全部细节。若需要深入理解，仍可沿原依赖关系回到 $\pi_u$。例如，若 $T$ 直接依赖 $A,B$，$B$ 依赖 $C$，而 $A,C$ 无新依赖，则 $\ell(A)=\ell(C)=0$，$\ell(B)=1$，$\ell(T)=2$。建立 $A,C$ 后，$B$ 仅需证明从 $C$ 与既有知识到自身结论的推导；建立 $B$ 后，$T$ 只需在 $A,B$ 的基础上验证新的局部推导。$T$ 的直接证明所呈现的数学内容与其全部递归证明的内容因此可以显著不同，但完整论证并未丢失。
+
+这一机制还允许在最终定理尚未建立时保留独立成立的部分成果。例如，一项原本用于证明 $T$ 的第 0 级引理可能已经被验证，并能用于证明另一个独立研究中的定理 $T'$。即使 $T$ 的其他分支尚待解决，这个引理的数学价值也已经能够被利用。由此，研究进度不再仅由整个目标的最终成败体现，而可以逐步沉淀为可复用的数学知识。
+
+需要特别区分两种视角。式 \eqref{eq:level} 的层级始终相对于给定的证明依赖图及其初始知识边界 $\K_0$；式 \eqref{eq:lib} 描述随时间增长的可用知识。已验证引理加入公共库后，不会造成原有证明图的数学层级自相矛盾：研究者仍可按原图阅读其完整依赖。下一项研究若以更新后的库为起点，则可以直接引用这些已验证结论，并在新的图上计算新的层级。层级是证明结构的相对属性，而不是数学命题永久不变的全局等级。
+
+\begin{proposition}[累积的逻辑保守性]\label{prop:conservative}
+若 $A_t$ 中所有命题均满足 $\Sigma_0\vdash P_v$，则对任意同一语言中的命题 $R$，有
+\[
+ \Sigma_0\cup S(\K_t)\vdash R\quad\Longleftrightarrow\quad\Sigma_0\vdash R.
+\]
+\end{proposition}
+\begin{proof}
+从右向左由推导的弱化性质得到。反之，一个有限推导至多使用有限个新引理结论。由于每一个新引理结论均可由 $\Sigma_0$ 推出，将对应推导代入，即得 $\Sigma_0\vdash R$。
+\end{proof}
+
+因此，累积定理库的核心价值不是增加新的公理，而是增加能够被直接调用的已证知识，节省重新构造或重新阅读基础论证的成本。上述累积模型描述正确结果的理想化增长；现实中若某一记录后来被发现存在错误，当然可以更正它并重新检查受影响的依赖关系，这与传统数学的勘误责任相同。
+
+\subsection{形式化验证与人类理解如何协同}
+形式正确性、语义忠实性与数学理解是三个相互联系但不等价的问题。形式检查器核验指定形式命题的推导；语义核查关注形式陈述是否表达预期数学内容；数学理解还涉及论证的思想、动机、适用范围和与其他理论的关系。
+
+本文的核心设想是，通过将复杂证明分解为篇幅和语义范围较易处理的局部论证，使人类可以逐级审查这些问题。如果某节点存在自然语言证明与 Lean 表述，专家可以围绕该节点的对象、量词、假设、结论及所用引理检查其对应关系，而不是在体量庞大的证明材料中同时处理所有细节。已有的准确表述可被后续节点复用，减少同一语义接口的重复审查。
+
+但短并不等于简单。例如，本欲证明闭区间 $[0,1]$ 上的连续实函数有界，若形式化时改成开区间 $(0,1)$，则 $f(x)=1/x$ 即为反例；反过来，若本欲证明开区间上的命题，却只证明紧区间上的版本，检查通过也不能确立原命题。又如，一个极短的引理可以依赖高度抽象且难懂的定义。分层并不自动保证语义忠实，而是使语义审查有较为明确的局部对象；形式正确性和数学意义仍需分别考虑。本文并不要求每一项研究使用 Lean，形式化工具是可利用的验证资源，人类的数学理解是新范式希望促进的目标。
+
+\section{完整数学示例：不等深依赖与知识复用}
+为具体展示该机制，以下取一个经典数学结果作结构示例，不主张这些结果为新发现。假设示例中的初始库尚未收录下面的三个证明记录，只提供实内积空间的基本性质、实数运算及初等极限法则。设 $H$ 为实内积空间，定义 $\|x\|=\sqrt{\langle x,x\rangle}$，目标是证明：若 $\|x_n-x\|\to0$、$\|y_n-y\|\to0$，则 $\langle x_n,y_n\rangle\to\langle x,y\rangle$。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,node distance=8mm,every node/.style={font=\small},b/.style={draw=ink!65,fill=soft,rounded corners=2pt,align=center,minimum width=66mm,minimum height=9mm}]
+\node[b] (t) {目标 $T$：内积的联合连续性};
+\node[b,below=of t] (c) {$C$：范数的反三角不等式};
+\node[b,below=of c] (b) {$B$：范数的三角不等式};
+\node[b,below=of b] (a) {$A$：Cauchy--Schwarz 不等式};
+\draw[->,semithick,ink] (t)--(c);\draw[->,semithick,ink] (c)--(b);\draw[->,semithick,ink] (b)--(a);
+\draw[->,semithick,ink] (t.west)--++(-1.0,0)|-(a.west);
+\foreach \n/\k in {t/3,c/2,b/1,a/0}{\node[anchor=west,text=muted] at ([xshift=4mm]\n.east) {第 \k\ 级};}
+\node[anchor=east,text=muted] at ([xshift=-12mm]c.west) {跨层引用};
+\end{tikzpicture}
+\par\small 图 2：目标定理直接依赖 $A$ 与 $C$；$A$ 同时被 $B$ 使用。
+\end{center}
+
+\noindent\textbf{第 0 级：引理 $A$（Cauchy--Schwarz 不等式）。} 对 $x,y\in H$，有 $|\langle x,y\rangle|\le\|x\|\|y\|$。
+\begin{proof}
+若 $y=0$，结论显然。否则取 $t=\langle x,y\rangle/\|y\|^2$。由内积的正定性和双线性，
+\[
+ 0\le\|x-ty\|^2=\|x\|^2-\frac{\langle x,y\rangle^2}{\|y\|^2}.
+\]
+移项并取平方根得结论。
+\end{proof}
+该证明只使用示例中已有的基础知识，故 $D(A)=\varnothing$，$\ell(A)=0$。一旦建立，可将其作为独立结论纳入库。
+
+\noindent\textbf{第 1 级：引理 $B$（三角不等式）。} 对 $x,y\in H$，有 $\|x+y\|\le\|x\|+\|y\|$。
+\begin{proof}
+由内积展开及引理 $A$，
+\[
+ \|x+y\|^2=\|x\|^2+2\langle x,y\rangle+\|y\|^2
+ \le(\|x\|+\|y\|)^2.
+\]
+两边非负，取平方根即得结论。
+\end{proof}
+这里 $D(B)=\{A\}$，故 $\ell(B)=1$。验证者只需检查这个展开和对引理 $A$ 的使用。
+
+\noindent\textbf{第 2 级：引理 $C$（反三角不等式）。} 对 $x,y\in H$，有 $|\|x\|-\|y\||\le\|x-y\|$。
+\begin{proof}
+由引理 $B$，$\|x\|\le\|x-y\|+\|y\|$；交换 $x,y$，并利用 $\|y-x\|=\|x-y\|$，得 $\|y\|\le\|x-y\|+\|x\|$，合并即得。
+\end{proof}
+因此 $D(C)=\{B\}$，$\ell(C)=2$。该引理建立后，也可独立用于研究范数的连续性。
+
+\noindent\textbf{第 3 级：目标定理 $T$。}
+\begin{proof}
+由引理 $C$，$\|y_n\|\to\|y\|$，故 $(\|y_n\|)$ 有界。由双线性和引理 $A$，
+\begin{align*}
+ |\langle x_n,y_n\rangle-\langle x,y\rangle|
+ &\le |\langle x_n-x,y_n\rangle|+|\langle x,y_n-y\rangle|\\
+ &\le \|x_n-x\|\,\|y_n\|+\|x\|\,\|y_n-y\|\to0.
+\end{align*}
+结论成立。
+\end{proof}
+目标直接引用 $A$ 和 $C$，故 $D(T)=\{A,C\}$，且 $r=1+\max(0,2)=3$。注意 $A$ 的证明只建立一次，却由 $B$ 与 $T$ 共同引用。$T$ 不需要展开 $C$ 背后的整个证明。
+
+\begin{center}\small
+\begin{tabular}{ccll}\toprule
+节点 & 层级 & 直接新依赖 & 独立可用的结论\\\midrule
+$A$ & 0 & 无 & 内积的绝对值估计\\
+$B$ & 1 & $A$ & 三角不等式\\
+$C$ & 2 & $B$ & 范数差的估计\\
+$T$ & 3 & $A,C$ & 内积的联合连续性\\\bottomrule
+\end{tabular}\par\smallskip 表 1：示例证明的层级与依赖。
+\end{center}
+
+如果另一项研究以已经包含 $A,B,C$ 的公共库为起点，便可以直接调用这些成果，而无需重建示例中原有的 0 至 2 级。若该新研究的目标仅使用这些已有结论，则其目标可成为新的第 0 级。这样便能看出：原图的层级刻画本次证明所增加的知识，累积库则改变后续研究可以从哪里起步。
+
+示例的规模很小，不能证明大型 AI 证明必然具有同样优良的可分解性；其用途是完整展示该范式的逻辑及运行机制。
+
+\section{新范式带来的收益及其成立条件}
+\subsection{降低单次审查所面对的认知范围}
+完整证明的规模与单个局部证明的规模是不同对象。设每个节点的局部审查成本为 $c(v)$，暂把它理解为完成该节点的理解与核查所需的工作量。分层的直接作用不是保证 $\sum_v c(v)$ 小于传统审查成本，而是使工作量以多个明确的任务呈现；对于适当的分解，研究者可专注于其专业领域或当前依赖接口，而不必反复展开整个上游证明。
+
+在大型论证中，局部说明还可用于逐步揭示哪些引理是关键新思想、哪些只是现有知识的应用。把复杂性集中于真正需要解释的数学节点，可以为概念化、简化和进一步推广提供更清晰的入口。这里的收益取决于分解质量，而非单纯节点数量；本文不把任何固定长度或复杂度阈值作为新范式的条件。
+
+\subsection{促进分布式验证与知识吸收}
+由命题 \ref{prop:height}，同层节点彼此不具有直接或间接依赖；它们可能共享已经建立的更低层结果。因此，就逻辑依赖而言，不同分支的研究与审查可以并行安排，不必让每位审查者承担全部工作。
+
+若以 $c(v)$ 表示节点所需处理时间，且假设有足够审查资源、不考虑协作开销并按依赖顺序执行，则理想化的最早完成时间满足
+\[
+ F(v)=c(v)+\max_{u\in D(v)}F(u),\qquad \max\varnothing:=0.
+\]
+$F(T)$ 是该理想模型下的关键路径时间，而总工作量为 $\sum_{v\in V}c(v)$。两者的区别说明，分层可能使经过合理分工的团队缩短整体等待时间，即便总工作量没有同比下降。现实效果仍取决于专家可用性、沟通成本与局部任务的难度。
+
+\subsection{使已完成的验证获得长期复用价值}
+公共定理库带来另一项不同于并行审查的收益。设若干研究项目分别需要证明节点集合 $V_1,\ldots,V_m$；将确实相同、可兼容复用的节点视为同一记录。若反复建立同一节点的成本恒为 $c(v)\ge0$，其出现次数为 $m_v$，则完全重复建立与只建立一次的工作量之差为
+\begin{align*}
+ W_{\mathrm{repeat}}-W_{\mathrm{reuse}}
+ &=\sum_{i=1}^m\sum_{v\in V_i}c(v)-\sum_{v\in\bigcup_i V_i}c(v)\\
+ &=\sum_{v\in\bigcup_i V_i}(m_v-1)c(v)\ge0.
+\end{align*}
+这不是已测得的效率提升，而是一个说明复用机制的条件性模型。实际研究已经存在引用和复用，故它不是对现有学术制度从零开始的比较；维护、检索、接口兼容和重新理解也都具有成本。范式转移的目标在于使更多局部证明能够真正进入公共可复用体系，而非宣称任何分解都节省资源。
+
+从长远看，AI 也可以利用人类已核查的知识开展新证明，使前一次研究的吸收工作成为后一次发现的起点。若这种循环能够稳定运行，知识增长便不再只是证明总量的增加，而是可直接调用的数学资源的增长。
+
+\subsection{提升错误定位、解释传播与研究的连续性}
+显式依赖关系为理解或勘误提供具体路径。若某节点的结论或证明出现问题，可以定位沿反向依赖路径引用它的相关结果，判断哪些论证需要重新核查。其他不依赖该节点的结果在原有前提保持有效时，不必仅因同属一个项目而失去其独立性。这是依赖结构的追踪优势，不是对所有错误自动修复的保证。
+
+同样，数学家可以围绕重要节点撰写更清晰的解释、给出替代证明、发现更一般的结论或将其应用于不同领域。传统论文擅长讲述核心思想和统一的研究叙事；知识网络擅长保存局部成果及依赖。两种载体相互补充，使数学共同体既能看到整体思想，又能在需要时深入具体证明。
+
+\subsection{使人类理解成为与 AI 生产相互增强的过程}
+以上收益的共同指向，是让 AI 产生的证明成为人类能够不断吸收的研究材料。形式化检查可以建立某种严格的逻辑保证，局部解释使数学内容可以被理解，公共库则保存这些已经建立的结果供后续研究使用。人类并不因为能够依靠已知结论而失去研究职责；选择问题、提炼结构、理解方法和揭示新的数学联系，依然是数学研究的核心活动。
+
+本文所主张的不是以定理数量替代数学价值，也不是要求每一条局部推理都成为独立学术论文。相反，它希望通过改变验证与知识积累的组织方式，为真正有价值的理解和理论创造释放研究资源。
+
+\section{与既有研究的关系：从工具发展到制度实践}
+分层引理、定理复用、形式化证明与依赖图均有长期历史。Mathlib 已展示开放数学知识库的可行性\cite{mathlib}；Polymath 项目展示了开放数学协作的潜力\cite{polymath}。Kontorovich 进一步讨论了可导航证明依赖图、多分辨率理解与模块化数学协作，并直接提出这类结构可能改变数学交流和责任分工\cite{kontorovich}。LeanArchitect 将自然语言蓝图与 Lean 代码中的依赖信息结合\cite{architect}；MathCoPilot 将人类指导、证明分解、AI 证明工作和知识库结合为研究工作台\cite{copilot}。Mathlib Initiative 的路线图也已涉及共享数学成果、可移植陈述与信任信息\cite{roadmap}。
+
+这些工作并非本文的附属背景，而是本文所倡议的制度变革的重要先例与基础。尤其是 Kontorovich 对模块化数学交流的论述，与本文的研究目标有实质重合；不能将依赖图、定理库、局部理解或协作本身声称为本文首创。
+
+本文试图进一步明确一种可直接讨论的科研接受机制：以相对于初始知识库的新证明节点为组织对象，以自底向上的依赖高度安排其关系，以局部人类理解和验证建立可复用的新知识，并允许这些成果在目标定理尚未完全建立时被独立保留和用于后续研究。本文的重点是把这套机制提升为大规模 AI 数学成果的组织与接受原则，而不是为某个工具建立新的技术标准。
+
+该定位不等于断言此前没有人提出相同或相近的制度主张。其学术价值应当在公开讨论和实际使用中判断。本文所提供的是一个明确的架构、一组形式上可检验的性质，以及面向数学共同体的行动倡议；并非已由对照实验确认的普遍最优制度。
+
+\section{行动倡议：让数学共同体主动塑造转变}
+数学界已经讨论 AI 可能导致的价值错位和制度压力。本文赞同其对人类理解、正确性与学术自主的重视，但强调还需要与这些价值相匹配的具体科研组织实践。\textbf{与其在证明规模持续增长时被动扩大原有审查负担，不如现在开始建立能够累积吸收证明的研究方式。}
+
+以下方向是供各方自愿参与的实践建议，并非本文所定义范式的额外规则。
+
+\paragraph{数学家与研究团队。} 在复杂研究中探索将新证明组织为具有明确依赖关系的局部成果。通过研讨、合作和独立检查逐级理解数学内容，并让已经建立的有用引理能够独立传播。对关键新思想仍应进行整体解释、简化和推广。
+
+\paragraph{定理库、形式化社区与基础设施提供者。} 利用既有项目支持局部成果的引用、共享、语义理解与依赖追踪。不同系统可以保留各自的设计；范式本身不依赖某个唯一平台，也不要求倡议者从头实现所有基础设施。
+
+\paragraph{期刊、大学与学术组织。} 探索如何承认局部验证、解释、知识整合与可复用证明所构成的学术贡献；讨论如何让大型证明的可核查材料和公共知识记录与传统论文互相补充。学术评价应关注数学意义和贡献质量，而非单纯计算引理或验证任务数量。
+
+\paragraph{AI 研究机构与资助方。} 将投入的一部分用于使新证明更易于人类理解与利用，包括提供可复核的证明材料、支持专家参与解释和核查、资助开放知识基础设施与研究协作。证明生成的规模越大，帮助其转化为公共知识的投入就越有潜在价值。
+
+一个自然的实践机会是已经公开的黎曼猜想证明。可以从现有数学导读与形式化资料出发，将主要归约和关键估计逐步组织为人类可读的依赖结构，围绕明确的局部命题展开解释与验证，并将有独立价值的已建立引理供后续研究复用。这是一项合作方向的建议，不表示本文已完成该证明的重新组织或审查。
+
+这些行动可以从真实数学研究和已经公开的复杂证明出发，无需等待全球统一标准。围绕实际案例比较局部可理解性、审查投入、知识复用和理论发现，将有助于判断哪些组织方式确实改善研究实践。本文不以尚未完成的实证工作作为发出倡议的障碍，也不将预期收益当作已被实验证实的事实。
+
+\paragraph{公共基础设施与持续激励。} 定理库维护、形式化计算、数学解释和人工审查都需要资源。可探索的支持方式包括公共科研资助、AI 实验室对证明吸收工作的赞助、机构采购研究协作服务，以及对高价值验证与解释的学术认可或合理报酬。开放知识与专业服务并不必然冲突；但资金安排不应被误认为数学正确性的来源。本文不指定独家提供者、付费模式或新的评价制度。这些均是未来合作中的可选探索方向，而非本范式的定义。
+
+\section{结语}
+人工智能可能使数学进入一个证明不再像过去那样稀缺的时代。但证明的丰裕并不意味着数学理解已经丰裕，更不意味着数学研究的终结。
+
+本文倡议的分层证明与累积验证范式，建立于数学证明本有的可组合性之上，将这一性质从论证方式延伸到知识接受、传播和复用的组织方式：从基础新引理开始，使已验证成果逐级成为公共知识，并以此支持更高层级的定理与新的研究。这样，宏大证明不再仅仅是需要被一次性消化的整体材料，也可以成为一个持续被人类理解和建立的知识结构。
+
+数学界不应在维护人类理解和利用 AI 能力之间被迫作出选择。我们应主动重构研究实践，使人类能够在不断增长的机器生成证明中发现、审查、吸收并发展真正的数学思想。
+
+\textbf{现在就应开始这一转变。其目标不是让机器替人类拥有更多定理，而是让人类借助机器能够理解更多数学，并在这一基础上创造更多数学。}
+
+\section*{AI 使用说明}
+本研究的基本构想、范式转移目标以及自底向上的层级主方案由提案人提出或确认。OpenAI 的 ChatGPT 参与了架构形式化、逻辑分析、文献检索、数学示例构造和全文起草与修订。署名作者已确认本稿的修订，并对论文内容承担学术责任。AI 不作为作者署名。
+
+\clearpage
+\begin{thebibliography}{99}\small\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+\bibitem{thurston} W. P. Thurston. On Proof and Progress in Mathematics. \emph{Bulletin of the AMS}, 30(2), 161--177, 1994. \url{https://doi.org/10.1090/S0273-0979-1994-00502-6}.
+\bibitem{tao} T. Tao. Mathematics in the Age of AI. 2026. \url{https://arxiv.org/abs/2608.16753}.
+\bibitem{leiden} Leiden Declaration on Artificial Intelligence and Mathematics. June 2, 2026. \url{https://doi.org/10.5281/zenodo.20302944}; \url{https://leidendeclaration.ai/}.
+\bibitem{fields} T. Tao and co-signatories. A Severe Misalignment of AI in Mathematics. September 11, 2026. \url{https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/}.
+\bibitem{alpoge} L. Alpöge. Announcement concerning the Riemann Hypothesis. November 20, 2026. \url{https://alpo.ge/remark.pdf}.
+\bibitem{rh} Lean FRO and Mathlib Initiative. Lean Verification of the Riemann Hypothesis. Joint statement, November 21, 2026. \url{https://leanprover-community.github.io/blog/posts/riemann-hypothesis/}.
+\bibitem{rubinstein} M. Rubinstein. Alpöge/Claude Proof of the Generalized Riemann Hypothesis. Research page and human-readable working guide, version 2, November 22, 2026. \url{https://www.math.uwaterloo.ca/~mrubinst/alpoge_claude_grh/}.
+\bibitem{mathlib} The Mathlib Community. The Lean Mathematical Library. \emph{CPP 2020}. \url{https://arxiv.org/abs/1910.09336}.
+\bibitem{kontorovich} A. Kontorovich. The Shape of Math To Come. \emph{Proceedings of the International Congress of Mathematicians 2026}, Vol. 2. \url{https://doi.org/10.1137/25M1806764}; preprint \url{https://arxiv.org/abs/2510.15924}.
+\bibitem{architect} T. Zhu, P. Monticone, S. Welleck, and J. Avigad. LeanArchitect: Automating Blueprint Generation for Humans and AI. \emph{ITP 2026}, LIPIcs 382, 25:1--25:16. \url{https://doi.org/10.4230/LIPIcs.ITP.2026.25}.
+\bibitem{polymath} T. Gowers and M. Nielsen. Massively Collaborative Mathematics. \emph{Nature}, 461, 879--881, 2009. \url{https://doi.org/10.1038/461879a}.
+\bibitem{copilot} J. Zhang et al. MathCoPilot: An Interactive System for Human--AI Symbiotic Paradigm of Mathematical Research. 2026. \url{https://arxiv.org/abs/2607.14582}.
+\bibitem{roadmap} Mathlib Initiative. The Mathlib Initiative Roadmap (October 2026--March 2027). \url{https://mathlib-initiative.org/roadmap/}.
+\end{thebibliography}
+\end{document}
