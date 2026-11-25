@@ -7,6 +7,8 @@
 
 > A proposal to turn the growing capacity for machine-generated proofs into cumulative, human-understandable mathematical knowledge.
 
+[中文研究主页](README.zh-CN.md) · [How to build](BUILD.md) · [Academic discussion](https://github.com/jimmyMSTon/hierarchical-mathematics/discussions)
+
 ## Read the paper
 
 | Language | Manuscript | Reproducible source |
@@ -14,7 +16,7 @@
 | English (primary) | [PDF](paper/Paradigm_EN.pdf) | [LaTeX](source/Paradigm_EN.tex) |
 | 中文 | [PDF](paper/Paradigm_ZH.pdf) | [LaTeX](source/Paradigm_ZH.tex) |
 
-Version **1.0.0** · Manuscript dated 24 November 2026 · [Release history](../../releases)
+Version **1.0.1** (technical maintenance; manuscript dated 24 November 2026) · [Latest release](https://github.com/jimmyMSTon/hierarchical-mathematics/releases/tag/v1.0.1) · [Original publication v1.0.0](https://github.com/jimmyMSTon/hierarchical-mathematics/releases/tag/v1.0.0)
 
 ## The challenge
 
@@ -67,12 +69,16 @@ The aim is not to replace mathematical papers or claim to invent theorem librari
 
 ## Citation
 
-Lai, Chunming (2026). *From Proof Production to Knowledge Assimilation: A Paradigm of Hierarchical Proofs and Cumulative Verification for Mathematics in the Age of AI*. Position paper, version 1.0.0.
+Lai, Chunming (2026). *From Proof Production to Knowledge Assimilation: A Paradigm of Hierarchical Proofs and Cumulative Verification for Mathematics in the Age of AI*. Position paper, version 1.0.1 (technical maintenance of v1.0.0).
 
-See [CITATION.cff](CITATION.cff) for machine-readable citation metadata.
+See [CITATION.cff](CITATION.cff) and [BibTeX](CITATION.bib) for citation metadata. The DOI and arXiv identifier are not yet assigned.
+
+## Access and reproducibility
+
+The English PDF is unchanged from v1.0.0. Version 1.0.1 embeds missing Chinese Unicode maps without changing the Chinese PDF page appearance or manuscript content. See [BUILD.md](BUILD.md) for compilation and the post-processing command, [SHA256SUMS](SHA256SUMS) for file verification, and [REFERENCES.md](REFERENCES.md) for open-access alternatives. Both manuscripts have selectable text; the PDFs are not certified PDF/UA tagged documents.
 
 ## Research status and AI disclosure
 
 This is a research and publication paradigm proposal, not a claim of independent peer review, formal verification of the manuscript, or established historical priority. The central concept and choice of bottom-up dependency height were supplied or confirmed by the author; ChatGPT assisted with formalization, analysis, literature research, examples, drafting and revision, as disclosed in the manuscript.
 
-The English source builds with pdfLaTeX, and the Chinese source with XeLaTeX. The manuscripts and their sources are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). See [LICENSE](LICENSE).
+The English source builds with pdfLaTeX, and the Chinese source with XeLaTeX followed by the documented Unicode-map repair. The manuscripts and their sources are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). See [LICENSE](LICENSE).

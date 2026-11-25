@@ -6,7 +6,7 @@ authors:
     given-names: Chunming
     affiliation: Independent Researcher
     orcid: https://orcid.org/0009-0002-7594-4535
-version: "1.0.0"
+version: "1.0.1"
 date-released: "2026-11-25"
 url: "https://github.com/jimmyMSTon/hierarchical-mathematics"
 license: CC-BY-4.0
@@ -18,7 +18,7 @@ preferred-citation:
       given-names: Chunming
       orcid: https://orcid.org/0009-0002-7594-4535
   year: 2026
-  version: "1.0.0"
+  version: "1.0.1"
   institution:
     name: Independent Researcher
-  url: "https://github.com/jimmyMSTon/hierarchical-mathematics/releases/tag/v1.0.0"
+  url: "https://github.com/jimmyMSTon/hierarchical-mathematics/releases/tag/v1.0.1"

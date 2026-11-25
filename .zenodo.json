@@ -1,0 +1,18 @@
+{
+  "title": "From Proof Production to Knowledge Assimilation: A Paradigm of Hierarchical Proofs and Cumulative Verification for Mathematics in the Age of AI",
+  "creators": [
+    {
+      "name": "Lai, Chunming",
+      "affiliation": "Independent Researcher",
+      "orcid": "0009-0002-7594-4535"
+    }
+  ],
+  "description": "<p>A research position paper proposing hierarchical proof dependencies, local human understanding and verification, and cumulative incorporation of established mathematical results into shared theorem libraries. Includes English and Chinese manuscripts and LaTeX sources. Version 1.0.1 is a technical maintenance release; mathematical content is unchanged from v1.0.0. AI assistance is disclosed in the manuscripts.</p>",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "access_right": "open",
+  "license": "cc-by-4.0",
+  "version": "1.0.1",
+  "language": "eng",
+  "keywords": ["mathematical research", "artificial intelligence", "hierarchical proofs", "cumulative verification", "mathematical understanding", "formal mathematics"]
+}
